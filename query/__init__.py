@@ -1,6 +1,6 @@
-import json
 from Bio import Entrez
 from urllib.request import urlopen
+from urllib.error import HTTPError
 import csv
 
 def get_ncbi_ids(email, database, search_term, maximum_returned_items):
@@ -23,16 +23,31 @@ def get_search_cache_details(email, database, search_term, maximum_returned_item
     count, id_list = get_ncbi_ids(email, database, search_term, maximum_returned_items)
     webenv, query_key = get_search_cache_keys(database, id_list)
 
-    url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=sra&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
-    response = urlopen(url)
+    attempts = 1
+    while attempts <= 5:
+        try:
+            url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=' + database + '&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
+            print("Attempt %i of 5" % attempts)
+            break
+        except HTTPError as err: 
+            # error handling in case NCBI server is down.
+            if 500 <= err.code <= 599:
+                print("Received error from server %s" % err)
+                print("Attempt %i of 5" % attempts)
+                attempts += 1
+                time.sleep(15)
+            else:
+                raise
 
+    response = urlopen(url)
     return response
 
 def get_csv(email, database, search_term, maximum_returned_items=100000, download=False):
+    # FIXME: add additional funciton to write csv to file, include logic here based on "download"
     response = get_search_cache_details(email, database, search_term, maximum_returned_items)
 
     csv_string = response.read().decode()
-    csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator, so you need to do the next line
+    csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator
     csv_list = [row for row in csv_data] 
 
     return csv_list
