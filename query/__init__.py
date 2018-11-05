@@ -22,11 +22,13 @@ def get_search_cache_keys(email, database, search_term, maximum_returned_items):
     return (count, id_list, webenv, query_key)
 
 def get_csv(email, database, search_term, maximum_returned_items, download=False):
+    count, id_list, webenv, query_key = get_search_cache_keys(email, database, search_term, maximum_returned_items)
+
     url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=sra&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
     response = urlopen(url)
 
     csv_string = response.read().decode()
     csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator, so you need to do the next line
-    csv_list = list(csv)
+    csv_list = [row for row in csv_data] 
 
     return csv_list
