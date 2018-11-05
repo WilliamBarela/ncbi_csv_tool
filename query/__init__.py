@@ -1,6 +1,7 @@
 from Bio import Entrez
 from urllib.request import urlopen
 from urllib.error import HTTPError
+import json
 import csv
 
 def get_ncbi_ids(email, database, search_term, maximum_returned_items):
@@ -64,3 +65,20 @@ def get_dict_w_xml(email, database, search_term, maximum_returned_items=100000):
     dict_w_xml = Entrez.read(summary_results_xml)
 
     return dict_w_xml
+
+def print_pretty_json(dict_w_json):
+    print(json.dumps(dict_w_json, sort_keys=True, indent=4, separators=(',',':')))
+
+
+def get_dict_w_json(email, database, search_term, maximum_returned_items=100000, pretty_print=False):
+    _, _, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
+
+    summary_results_json = Entrez.esummary(db=database,webenv=webenv,query_key=query_key,retmode="json")
+    raw_json = summary_results_json.read()
+    dict_w_json = json.loads(raw_json)
+   
+
+    if pretty_print == True:
+        print_pretty_json(dict_w_json)
+
+    return dict_w_json
