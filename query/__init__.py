@@ -19,9 +19,14 @@ def get_search_cache_keys(database, id_list):
 
     return (webenv, query_key)
 
-def get_search_cache_details(email, database, search_term, maximum_returned_items):
+def get_query_keys(email, database, search_term, maximum_returned_items):
     count, id_list = get_ncbi_ids(email, database, search_term, maximum_returned_items)
     webenv, query_key = get_search_cache_keys(database, id_list)
+
+    return (count, id_list, webenv, query_key)
+
+def get_csv_stream(email, database, search_term, maximum_returned_items):
+    count, id_list, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
 
     attempts = 1
     while attempts <= 5:
@@ -44,10 +49,18 @@ def get_search_cache_details(email, database, search_term, maximum_returned_item
 
 def get_csv(email, database, search_term, maximum_returned_items=100000, download=False):
     # FIXME: add additional funciton to write csv to file, include logic here based on "download"
-    response = get_search_cache_details(email, database, search_term, maximum_returned_items)
+    response = get_csv_stream(email, database, search_term, maximum_returned_items)
 
     csv_string = response.read().decode()
     csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator
     csv_list = [row for row in csv_data] 
 
     return csv_list
+
+def get_dict_w_xml(email, database, search_term, maximum_returned_items=100000):
+    _, _, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
+
+    summary_results_xml = Entrez.esummary(db=database,webenv=webenv,query_key=query_key)
+    dict_w_xml = Entrez.read(summary_results_xml)
+
+    return dict_w_xml
