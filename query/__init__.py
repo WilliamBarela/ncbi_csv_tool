@@ -15,13 +15,13 @@ def get_ncbi_ids(email, database, search_term, maximum_returned_items):
 def get_search_cache_keys(email, database, search_term, maximum_returned_items):
     count, id_list = get_ncbi_ids(email, database, search_term, maximum_returned_items)
 
-    search_post_request = Entrez.read(Entrez.epost("sra",id=",".join(id_list)))
+    search_post_request = Entrez.read(Entrez.epost(database,id=",".join(id_list)))
     webenv = search_post_request["WebEnv"]
     query_key = search_post_request["QueryKey"]
 
     return (count, id_list, webenv, query_key)
 
-def get_csv(email, database, search_term, maximum_returned_items, download=False):
+def get_csv(email, database, search_term, maximum_returned_items=100000, download=False):
     count, id_list, webenv, query_key = get_search_cache_keys(email, database, search_term, maximum_returned_items)
 
     url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=sra&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
