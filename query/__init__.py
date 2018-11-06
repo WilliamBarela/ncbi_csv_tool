@@ -26,17 +26,7 @@ def get_query_keys(email, database, search_term, maximum_returned_items):
 
     return (count, id_list, webenv, query_key)
 
-def get_csv_stream(email, database, search_term, maximum_returned_items, report=""):
-    count, id_list, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
-
-    url = ""
-    if report == "summary":
-        url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=' + database + '&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
-    elif report == "runinfo":
-        url = 'https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&rettype=runinfo&db=' + database + '&WebEnv=' + webenv + '&query_key=' + query_key
-    else:
-        print("URL cannot be built because allowable report type was not specified!")
-
+def open_url(url):
     attempts = 1
     while attempts <= 5:
         try:
@@ -53,16 +43,41 @@ def get_csv_stream(email, database, search_term, maximum_returned_items, report=
             else:
                 raise
 
+def get_report_urls(email, database, search_term, maximum_returned_items):
+    count, id_list, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
 
-def get_csv(email, database, search_term, maximum_returned_items=100000, download=False, report="summary"):
-    # FIXME: add additional funciton to write csv to file, include logic here based on "download"
-    response = get_csv_stream(email, database, search_term, maximum_returned_items, report)
+    summary_url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=' + database + '&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
+    run_url = 'https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&rettype=runinfo&db=' + database + '&WebEnv=' + webenv + '&query_key=' + query_key
 
+    return (summary_url,run_url)
+
+
+
+def get_csv_list(response):
     csv_string = response.read().decode()
     csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator
     csv_list = [row for row in csv_data] 
 
     return csv_list
+
+def get_csv_lists(email, database, search_term, maximum_returned_items=100000):
+    """
+        This function has been added to ensure that only one post request is made to the NCBI API.
+        This is not only to ensure efficiency of API calls, but also to ensure consistency of the reports.
+        If this is not done this way, there will be two webenv calls, one for each report.
+        If either contains a more recent dataset, this could break other code.
+        As a result, it is best to use one webenv for both the summary and the run reports.
+    """
+    summary_url, run_url = get_report_urls(email, database, search_term, maximum_returned_items)
+
+    summary_csv_list = get_csv_list(open_url(summary_url))
+    run_csv_list = get_csv_list(open_url(run_url))
+
+    return (summary_csv_list, run_csv_list)
+
+def save_to_csv(csv_list=None, download_directory=None):
+    # FIXME: add additional funciton to write csv to file, include logic here based on "download"
+    print("Use os from the standard library to set the download directory; use csv.write() to write the csvs to the specified location.")
 
 def get_dict_w_xml(email, database, search_term, maximum_returned_items=100000):
     _, _, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
