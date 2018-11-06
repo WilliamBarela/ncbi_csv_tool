@@ -26,15 +26,23 @@ def get_query_keys(email, database, search_term, maximum_returned_items):
 
     return (count, id_list, webenv, query_key)
 
-def get_csv_stream(email, database, search_term, maximum_returned_items):
+def get_csv_stream(email, database, search_term, maximum_returned_items, report=""):
     count, id_list, webenv, query_key = get_query_keys(email, database, search_term, maximum_returned_items)
+
+    url = ""
+    if report == "summary":
+        url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=' + database + '&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
+    elif report == "runinfo":
+        url = 'https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&rettype=runinfo&db=' + database + '&WebEnv=' + webenv + '&query_key=' + query_key
+    else:
+        print("URL cannot be built because allowable report type was not specified!")
 
     attempts = 1
     while attempts <= 5:
         try:
-            url = 'https://www.ncbi.nlm.nih.gov/portal/utils/file_backend.cgi?Db=' + database + '&HistoryId=' + webenv + '&QueryKey=' + query_key + '&Sort=&Filter=all&CompleteResultCount=' + count + '&Mode=file&View=docsumcsv&p$l=Email&portalSnapshot=%2Fprojects%2FSequences%2FSeqDbRelease%401.90&BaseUrl=&PortName=live&FileName=&ContentType=csv'
-            print("Attempt %i of 5" % attempts)
-            break
+            # print("Attempt %i of 5" % attempts)
+            response = urlopen(url)
+            return response
         except HTTPError as err: 
             # error handling in case NCBI server is down.
             if 500 <= err.code <= 599:
@@ -45,12 +53,10 @@ def get_csv_stream(email, database, search_term, maximum_returned_items):
             else:
                 raise
 
-    response = urlopen(url)
-    return response
 
-def get_csv(email, database, search_term, maximum_returned_items=100000, download=False):
+def get_csv(email, database, search_term, maximum_returned_items=100000, download=False, report="summary"):
     # FIXME: add additional funciton to write csv to file, include logic here based on "download"
-    response = get_csv_stream(email, database, search_term, maximum_returned_items)
+    response = get_csv_stream(email, database, search_term, maximum_returned_items, report)
 
     csv_string = response.read().decode()
     csv_data = csv.reader(csv_string.splitlines(), delimiter=",", quotechar='"')    # this is a generator
