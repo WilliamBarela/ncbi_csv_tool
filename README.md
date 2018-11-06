@@ -17,3 +17,11 @@ This library will work with any 3.xx version of Python
 
 [Biopython](https://github.com/biopython/biopython) also *must* be installed in your Python environment.
 If you use ncbi_csv_tool in work contributing to scientific publication, please be sure to cite Biopython as mentioned on their Github page.
+
+## SRA reports:
+
+[study trace SRP104185](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=SRP104185)
+[NCBI search SRP104185](https://www.ncbi.nlm.nih.gov/sra/?term=SRP104185)
+
+[study trace SRP163200](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=SRP163200)
+[NCBI search SRP163200](https://www.ncbi.nlm.nih.gov/sra/?term=SRP163200)
