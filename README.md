@@ -9,7 +9,7 @@ To get a list of lists in csv format, in your Python script include the followin
 ```python
 from ncbi_csv_tool import query
 
-csv_list = query.get_csv("your.email@domain.edu", "selected_ncbi_database", "search_terms")
+csv_list = query.get_csv_lists("your.email@domain.edu", "selected_ncbi_database", "search_terms")
 ```
 
 ## Python requirements
