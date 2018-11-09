@@ -1,4 +1,4 @@
-class Summary(object):
+class Summary:
     '''
     Takes in a row from the summary_csv list of lists and creates and object
     '''
@@ -7,7 +7,7 @@ class Summary(object):
         '''add code'''
 
 
-class Runinfo(object):
+class Runinfo:
     '''
     Takes in a row from the runinfo_csv list of lists and creates and object
     '''
@@ -15,7 +15,7 @@ class Runinfo(object):
     def init(self, runinfo_row):
         '''add code'''
 
-class Projects(object):
+class Projects:
     '''
     Takes in summary and runinfo object and joins them into a project object
     '''
