@@ -88,7 +88,9 @@ class Projects:
         '''add code'''
 
 def summary_objects(summary_csv_list):
+    summary_csv_list.pop(0) # remove header
     return [Summary(summary_object) for summary_object in summary_csv_list if summary_object != []]
 
 def runinfo_objects(run_csv_list):
+    run_csv_list.pop(0) # remove header
     return [Runinfo(runinfo_object) for runinfo_object in run_csv_list if runinfo_object != []]
