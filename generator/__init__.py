@@ -83,7 +83,3 @@ class Projects:
 
     def init(self, summary_object, runinfo_object):
         '''add code'''
-
-"""
-
-"""
