@@ -4,8 +4,23 @@ class Summary:
     '''
 
     def init(self, summary_row):
-        '''add code'''
-
+        self.experiment_accession
+        self.experiment_title
+        self.organism_name
+        self.instrument
+        self.submitter
+        self.study_accession
+        self.study_title
+        self.sample_accession
+        self.sample_title
+        self.total_size_mb
+        self.total_runs
+        self.total_spots
+        self.total_bases
+        self.library_name
+        self.library_strategy
+        self.library_source
+        self.library_selection
 
 class Runinfo:
     '''
@@ -13,7 +28,53 @@ class Runinfo:
     '''
 
     def init(self, runinfo_row):
-        '''add code'''
+        self.run
+        self.release_date
+        self.load_date
+        self.spots
+        self.bases
+        self.spots_with_mates
+        self.avg_length
+        self.size_mb
+        self.assembly_name
+        self.download_path
+        self.experiment
+        self.library_name
+        self.library_strategy
+        self.library_selection
+        self.library_source
+        self.library_layout
+        self.insert_size
+        self.insert_dev
+        self.platform
+        self.model
+        self.sra_study
+        self.bio_project
+        self.study_pubmed_id
+        self.project_id
+        self.sample
+        self.bio_sample
+        self.sample_type
+        self.tax_id
+        self.scientific_name
+        self.sample_name
+        self.g1k_pop_code
+        self.source
+        self.g1k_analysis_group
+        self.subject_id
+        self.sex
+        self.disease
+        self.tumor
+        self.affection_status
+        self.analyte_type
+        self.histological_type
+        self.body_site
+        self.center_name
+        self.submission
+        self.dbgap_study_accession
+        self.consent
+        self.run_hash
+        self.read_hash
 
 class Projects:
     '''
@@ -24,69 +85,5 @@ class Projects:
         '''add code'''
 
 """
-experiment_accession
-experiment_title
-organism_name
-instrument
-submitter
-study_accession
-study_title
-sample_accession
-sample_title
-total_size_mb
-total_runs
-total_spots
-total_bases
-library_name
-library_strategy
-library_source
-library_selection
 
-run
-release_date
-load_date
-spots
-bases
-spots_with_mates
-avg_length
-size_mb
-assembly_name
-download_path
-experiment
-library_name
-library_strategy
-library_selection
-library_source
-library_layout
-insert_size
-insert_dev
-platform
-model
-sra_study
-bio_project
-study_pubmed_id
-project_id
-sample
-bio_sample
-sample_type
-tax_id
-scientific_name
-sample_name
-g1k_pop_code
-source
-g1k_analysis_group
-subject_id
-sex
-disease
-tumor
-affection_status
-analyte_type
-histological_type
-body_site
-center_name
-submission
-dbgap_study_accession
-consent
-run_hash
-read_hash
 """
