@@ -21,6 +21,9 @@ class Summary:
         self.library_strategy = summary_row[14]
         self.library_source = summary_row[15]
         self.library_selection = summary_row[16]
+    
+    # def srx_dict(self):
+
 
 class Runinfo:
     '''
