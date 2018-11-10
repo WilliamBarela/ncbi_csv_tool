@@ -86,3 +86,9 @@ class Projects:
 
     def __init__(self, summary_object, runinfo_object):
         '''add code'''
+
+def summary_objects(summary_csv_list):
+    return [Summary(summary_object) for summary_object in summary_csv_list if summary_object != []]
+
+def runinfo_objects(run_csv_list):
+    return [Runinfo(runinfo_object) for runinfo_object in run_csv_list if runinfo_object != []]
