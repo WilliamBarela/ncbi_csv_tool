@@ -3,7 +3,7 @@ class Summary:
     Takes in a row from the summary_csv list of lists and creates and object
     '''
 
-    def init(self, summary_row):
+    def __init__(self, summary_row):
         self.experiment_accession = summary_row[0]
         self.experiment_title = summary_row[1]
         self.organism_name = summary_row[2]
@@ -30,7 +30,7 @@ class Runinfo:
     Takes in a row from the runinfo_csv list of lists and creates and object
     '''
 
-    def init(self, runinfo_row):
+    def __init__(self, runinfo_row):
         self.run = runinfo_row[0]
         self.release_date = runinfo_row[1]
         self.load_date = runinfo_row[2]
@@ -84,5 +84,5 @@ class Projects:
     Takes in summary and runinfo object and joins them into a project object
     '''
 
-    def init(self, summary_object, runinfo_object):
+    def __init__(self, summary_object, runinfo_object):
         '''add code'''
