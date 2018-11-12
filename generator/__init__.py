@@ -1,3 +1,5 @@
+import json
+
 class Summary:
     '''
     Takes in a row from the summary_csv list of lists and creates and object
@@ -94,3 +96,13 @@ def summary_objects(summary_csv_list):
 def runinfo_objects(run_csv_list):
     run_csv_list.pop(0) # remove header
     return [Runinfo(runinfo_object) for runinfo_object in run_csv_list if runinfo_object != []]
+
+def open_json(filename):
+    with open(filename) as finput:
+        dictionary = json.load(finput)
+    return dictionary
+
+def write_json(dictionary, filename):
+    with open(filename, 'w') as foutput:
+        json.dump(dictionary, foutput, sort_keys=True, indent=4, separators=(',',':'))
+
